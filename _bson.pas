@@ -251,6 +251,7 @@ type
 
     procedure ReadStream(F: TStream); override;
     procedure WriteStream(F: TStream); override;
+    property Data :TBSONDocument read FData;  //add by ¡˙ À‘∆
   end;
 
   TBSONDatetimeItem = class(TBSONItem)

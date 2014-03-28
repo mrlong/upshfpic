@@ -17,7 +17,7 @@ object Form1: TForm1
   object lbl1: TLabel
     Left = 112
     Top = 208
-    Width = 137
+    Width = 16
     Height = 13
     Caption = 'lbl1'
   end
@@ -50,6 +50,15 @@ object Form1: TForm1
     Height = 17
     Caption = 'stop'
     TabOrder = 2
+  end
+  object btn2: TBitBtn
+    Left = 32
+    Top = 256
+    Width = 75
+    Height = 25
+    Caption = 'btn2'
+    TabOrder = 3
+    OnClick = btn2Click
   end
   object ds1: TDataSource
     DataSet = tbl1
