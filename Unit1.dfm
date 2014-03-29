@@ -52,13 +52,22 @@ object Form1: TForm1
     TabOrder = 2
   end
   object btn2: TBitBtn
-    Left = 32
-    Top = 256
-    Width = 75
+    Left = 16
+    Top = 240
+    Width = 145
     Height = 25
-    Caption = 'btn2'
+    Caption = #27979#35797#20889#20837#25991#26412
     TabOrder = 3
     OnClick = btn2Click
+  end
+  object btn3: TButton
+    Left = 16
+    Top = 280
+    Width = 153
+    Height = 25
+    Caption = #27979#35797#19978#20256#25991#20214
+    TabOrder = 4
+    OnClick = btn3Click
   end
   object ds1: TDataSource
     DataSet = tbl1
@@ -75,5 +84,10 @@ object Form1: TForm1
     TableName = 'xhzd_surnfu'
     Left = 80
     Top = 16
+  end
+  object dlgOpen1: TOpenDialog
+    DefaultExt = '*.*'
+    Left = 216
+    Top = 280
   end
 end

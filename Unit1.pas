@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, Buttons, DB, ADODB, Grids, DBGrids,
-  MongoDB,_bson;
+  MongoDBEx,_bson,GridFS,MongoDB;
 
 type
   TForm1 = class(TForm)
@@ -17,13 +17,20 @@ type
     lbl1: TLabel;
     chk1: TCheckBox;
     btn2: TBitBtn;
+    btn3: TButton;
+    dlgOpen1: TOpenDialog;
     procedure btn1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btn2Click(Sender: TObject);
+    procedure btn3Click(Sender: TObject);
   private
     { Private declarations }
+    //写入文件到mongodb内
+    function WriteFileEx( AFileName, AID: string) :Integer;
+
   public
     { Public declarations }
+
   end;
 
 var
@@ -203,6 +210,95 @@ begin
   bson.LoadFromFile(ExtractFilePath( Application.ExeName ) + 'hello.bson' );
   ShowMessage(bson.ToString);
   bson.Free;
+end;
+
+function TForm1.WriteFileEx(AFileName, AID: string): Integer;
+var
+  myGfs :TGridFS;
+  myMongo :TMongo;
+  myid : string;
+  myHost : string;
+  mydbName : string;
+
+  function DisConnectDBEx(var AMongo :TMongo ;var AGfs :tGridFs):Integer;
+  begin
+    Result := 0;
+    AMongo.disconnect;
+    FreeAndNil(AGfs);
+    FreeAndNil(AMongo);
+  end;
+
+  function ConnectDBEx(var AMongo :TMongo ;var AGfs :tGridFs ;APrefix :string) :Integer;
+  begin
+    Result := 99;
+    if Assigned(AMongo) then
+    begin
+      if DisConnectDBEx(AMongo,AGfs) <>0 then
+        Exit;
+    end;
+
+    AMongo := TMongo.Create(myHost);
+    if AMongo.isConnected() then
+    begin
+      AMongo.setTimeout(0);
+      AGfs := TGridFS.Create(AMongo,mydbName,APrefix);
+      Result := 0;
+    end
+    else begin
+      case AMongo.getErr of
+        1: Result := 4;
+        2: Result := 5;
+        4: Result := 7;
+        else
+          Result := 1;
+      end
+    end;
+  end;
+
+begin
+  Result := 99;
+  myMongo := nil;
+  myGfs  := nil;
+  myHost := '112.124.59.236'; //
+  mydbName := 'shfpic';
+  
+
+  if ConnectDBEx(myMongo,myGfs,'picture') <> 0 then  //链接数据库Collection。
+  begin
+    Result := 2 ;
+    Exit;
+  end;
+
+  if Assigned(myMongo) and (myMongo.isConnected) then
+  begin
+    myid := AID;
+    myid := LowerCase(myid);
+    if myGfs.storeFile(AFileName,PChar(myid)) then
+      Result := 0
+    else
+      Result := 3;
+  end
+  else
+    Result := 2;
+  DisConnectDBEx(myMongo,myGfs);
+end;
+
+
+procedure TForm1.btn3Click(Sender: TObject);
+var
+  myfilename : string;
+  myname : string;
+begin
+  if dlgOpen1.Execute then
+  begin
+    myfilename := dlgOpen1.FileName;
+    myname := 
+    if WriteFileEx(myfilename,'11')=0 then
+    begin
+      ShowMessage('ok');
+    end;
+    
+  end;
 end;
 
 end.

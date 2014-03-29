@@ -2,19 +2,19 @@ bson结构
 
   {
      zi:'国',
-     k :{
-		[ name : 作者名
-		  large: 大图的guid
-		  small: 小图的guid],
-		[...]
+     k :[
+		1:[ name: 作者, large: 大图的guid,small: 小图的guid],
+		2:[...]
 
-	},
-     x:{},
-     c:{},
-     l:{},
-     z:{}
+	],
+     x:[],
+     c:[],
+     l:[],
+     z:[]
 
   }
+
+
 
 
 楷书: k
