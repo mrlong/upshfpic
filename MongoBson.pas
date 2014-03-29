@@ -488,6 +488,7 @@ implementation
            Result := d;
       end;
       bsonLONG: Result := bson_iterator_long(handle);
+      bsonOID:Result := string(bson_iterator_string(handle));  //mrlong
       else
         Raise Exception.Create('BsonType (' + IntToStr(Ord(k)) + ') not supported by TBsonIterator.value');
     end;

@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, Buttons, DB, ADODB, Grids, DBGrids,
-  MongoDBEx,_bson,GridFS,MongoDB;
+  MongoDBEx,_bson,GridFS,MongoDB,MongoBson;
 
 type
   TForm1 = class(TForm)
@@ -48,6 +48,15 @@ const
 
 
 }
+
+function NewGuid():string;
+var
+  LTep: TGUID;
+begin
+  CreateGUID(LTep);
+  Result := GUIDToString(LTep);
+end;
+
 
 procedure TForm1.btn1Click(Sender: TObject);
 var
@@ -219,6 +228,7 @@ var
   myid : string;
   myHost : string;
   mydbName : string;
+   bs : TBson;
 
   function DisConnectDBEx(var AMongo :TMongo ;var AGfs :tGridFs):Integer;
   begin
@@ -274,7 +284,14 @@ begin
     myid := AID;
     myid := LowerCase(myid);
     if myGfs.storeFile(AFileName,PChar(myid)) then
-      Result := 0
+    begin
+      Result := 0;
+      //取出文件的_id
+      bs := myMongo.findOne('shfpic.picture.files',BSON(['filename',myid]));
+
+      //ShowMessage(IntToStr(bs.size));
+      ShowMessage(bs.value('_id'));
+    end
     else
       Result := 3;
   end
@@ -292,10 +309,10 @@ begin
   if dlgOpen1.Execute then
   begin
     myfilename := dlgOpen1.FileName;
-    myname := 
-    if WriteFileEx(myfilename,'11')=0 then
+    myname :=  NewGuid;
+    if WriteFileEx(myfilename,myname) = 0 then
     begin
-      ShowMessage('ok');
+      showmessage('ok');
     end;
     
   end;
